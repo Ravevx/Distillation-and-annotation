@@ -47,9 +47,8 @@ RELATION RULES:
 - partial_attack: weak or conditional undermining
 - Relations must always go FROM a premise TO a claim. Never claim-to-claim unless one is clearly a sub-conclusion.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-FEW-SHOT EXAMPLES
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+FEW-SHOT EXAMPLES:
 
 EXAMPLE 1 — Essay (AAEC style): hypothetical examples must be premises
 INPUT: "every fast decision is a wasted one [SEP] a hurried decision is almost never good [SEP] if someone quit his job without a plan B, he could end up unemployed [SEP] hasty decisions could affect the entire life of a person"
@@ -215,7 +214,7 @@ def annotate(text, source, retries=3):
                 parsed["relations"] = []
             return parsed, reasoning
         except Exception as e:
-            print(f"  ⚠️ Attempt {attempt+1} failed for {source}: {e}")
+            print(f" Attempt {attempt+1} failed for {source}: {e}")
             time.sleep(1.5)
     return {"components": [], "relations": []}, ""
 
@@ -226,7 +225,7 @@ try:
         messages=[{"role": "user", "content": "hi"}],
         max_tokens=5
     )
-    print("✅ Groq connected. Model:", MODEL_NAME)
+    print("Groq connected. Model:", MODEL_NAME)
 except Exception as e:
     raise RuntimeError(f"Cannot reach Groq API: {e}")
 
@@ -253,7 +252,7 @@ results = []
 if os.path.exists(CHECKPOINT_CSV):
     prev = pd.read_csv(CHECKPOINT_CSV)
     results = prev.to_dict("records")
-    print(f"✅ Resuming from checkpoint: {len(results)}")
+    print(f"Resuming from checkpoint: {len(results)}")
 
 done_inputs = set(r["input"] for r in results if "input" in r)
 df_sample = df_sample[~df_sample["argument"].isin(done_inputs)].reset_index(drop=True)
@@ -277,7 +276,7 @@ for _, row in tqdm(df_sample.iterrows(), total=len(df_sample)):
 
     if len(results) % 50 == 0:
         pd.DataFrame(results).to_csv(CHECKPOINT_CSV, index=False)
-        print(f"💾 checkpoint saved: {len(results)}")
+        print(f"checkpoint saved: {len(results)}")
 
     time.sleep(SLEEP_BETWEEN)
 
@@ -294,7 +293,7 @@ with open(OUTPUT_JSONL, "w", encoding="utf-8") as f:
     for r in valid:
         f.write(json.dumps(r, ensure_ascii=False) + "\n")
 
-print(f"✅ Saved {len(valid)} valid rows to {OUTPUT_JSONL}")
+print(f"Saved {len(valid)} valid rows to {OUTPUT_JSONL}")
 
 comp_counts = {}
 rel_counts = {}
